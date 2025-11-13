@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TodoController; // ✅ Tambahkan baris ini
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['handle.inertia'])->group(function () {
@@ -18,5 +19,10 @@ Route::middleware(['handle.inertia'])->group(function () {
 
     Route::group(['middleware' => 'check.auth'], function () {
         Route::get('/', [HomeController::class, 'home'])->name('home');
+
+        // ✅ Route resource todos + route ubah cover
+        Route::resource('todos', TodoController::class);
+        Route::post('todos/{todo}/change-cover', [TodoController::class, 'changeCover'])
+            ->name('todos.changeCover');
     });
 });

@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link, useForm } from "@inertiajs/react";
+import Swal from "sweetalert2"; // ✅ Tambahkan ini
 
 export default function RegisterPage() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -28,11 +29,24 @@ export default function RegisterPage() {
         event.preventDefault();
         post("/auth/register/post", {
             onSuccess: () => {
-                // Redirect ke halaman login setelah pendaftaran berhasil
+                // ✅ SweetAlert sukses
+                Swal.fire({
+                    icon: "success",
+                    title: "Pendaftaran Berhasil!",
+                    text: "Akun kamu telah dibuat. Silakan login.",
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
                 reset("name", "email", "password");
             },
             onError: () => {
-                // Reset field password jika ada error
+                // ✅ SweetAlert error
+                Swal.fire({
+                    icon: "error",
+                    title: "Terjadi Kesalahan",
+                    text: "Periksa kembali data yang kamu masukkan.",
+                    confirmButtonColor: "#3b82f6",
+                });
                 reset("password");
             },
         });
@@ -40,21 +54,28 @@ export default function RegisterPage() {
 
     return (
         <AuthLayout>
-            <div className="container mx-auto px-4 py-8">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-white dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all duration-500">
                 <div className="w-[360px] mx-auto">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Daftar untuk akun baru</CardTitle>
-                            <CardDescription>
-                                Isi formulir di bawah ini untuk membuat akun
-                                baru
+                    <Card className="shadow-2xl border-none rounded-2xl bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl transition-all duration-500">
+                        <CardHeader className="text-center pb-1">
+                            <CardTitle className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                                Buat Akun Baru
+                            </CardTitle>
+                            <CardDescription className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
+                                Daftar untuk mulai menggunakan aplikasi Anda
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
+
+                        <CardContent className="pt-1">
                             <form onSubmit={handleSubmit}>
-                                <FieldGroup>
-                                    <Field>
-                                        <FieldLabel htmlFor="name">
+                                {/* 🔹 Versi super rapat */}
+                                <FieldGroup className="!space-y-0">
+                                    {/* Nama Lengkap */}
+                                    <Field className="!mb-0">
+                                        <FieldLabel
+                                            htmlFor="name"
+                                            className="text-sm font-medium text-gray-700 dark:text-gray-200"
+                                        >
                                             Nama Lengkap
                                         </FieldLabel>
                                         <Input
@@ -66,15 +87,21 @@ export default function RegisterPage() {
                                                 setData("name", e.target.value)
                                             }
                                             required
+                                            className="rounded-md border-gray-300 focus:ring-2 focus:ring-indigo-300 text-sm py-2 mb-0"
                                         />
                                         {errors.name && (
-                                            <div className="text-sm text-red-600">
+                                            <div className="text-xs text-red-600 mt-0">
                                                 {errors.name}
                                             </div>
                                         )}
                                     </Field>
-                                    <Field>
-                                        <FieldLabel htmlFor="email">
+
+                                    {/* Email */}
+                                    <Field className="!mb-0">
+                                        <FieldLabel
+                                            htmlFor="email"
+                                            className="text-sm font-medium text-gray-700 dark:text-gray-200 mt-0"
+                                        >
                                             Email
                                         </FieldLabel>
                                         <Input
@@ -86,19 +113,23 @@ export default function RegisterPage() {
                                                 setData("email", e.target.value)
                                             }
                                             required
+                                            className="rounded-md border-gray-300 focus:ring-2 focus:ring-indigo-300 text-sm py-2 mb-0"
                                         />
-                                        {errors.password && (
-                                            <div className="text-sm text-red-600">
-                                                {errors.password}
+                                        {errors.email && (
+                                            <div className="text-xs text-red-600 mt-0">
+                                                {errors.email}
                                             </div>
                                         )}
                                     </Field>
-                                    <Field>
-                                        <div>
-                                            <FieldLabel htmlFor="password">
-                                                Kata Sandi
-                                            </FieldLabel>
-                                        </div>
+
+                                    {/* Password */}
+                                    <Field className="!mb-0">
+                                        <FieldLabel
+                                            htmlFor="password"
+                                            className="text-sm font-medium text-gray-700 dark:text-gray-200 mt-0"
+                                        >
+                                            Kata Sandi
+                                        </FieldLabel>
                                         <Input
                                             id="password"
                                             type="password"
@@ -111,28 +142,32 @@ export default function RegisterPage() {
                                                 )
                                             }
                                             required
+                                            className="rounded-md border-gray-300 focus:ring-2 focus:ring-indigo-300 text-sm py-2 mb-0"
                                         />
                                         {errors.password && (
-                                            <div className="text-sm text-red-600">
+                                            <div className="text-xs text-red-600 mt-0">
                                                 {errors.password}
                                             </div>
                                         )}
                                     </Field>
-                                    <Field>
+
+                                    {/* Tombol Daftar */}
+                                    <Field className="pt-2">
                                         <Button
                                             type="submit"
-                                            className="w-full"
+                                            className="w-full py-2.5 rounded-full text-base font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md transition-transform hover:scale-[1.02]"
                                             disabled={processing}
                                         >
                                             {processing
                                                 ? "Memproses..."
-                                                : "Daftar"}
+                                                : "Daftar Sekarang"}
                                         </Button>
-                                        <FieldDescription className="text-center">
+
+                                        <FieldDescription className="text-center mt-1 text-gray-500 dark:text-gray-400 text-sm">
                                             Sudah punya akun?{" "}
                                             <Link
                                                 href="/auth/login"
-                                                className="text-primary hover:underline"
+                                                className="text-indigo-600 font-semibold hover:underline"
                                             >
                                                 Masuk di sini
                                             </Link>

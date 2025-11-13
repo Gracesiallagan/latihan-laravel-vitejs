@@ -17,6 +17,12 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->boolean('is_finished')->default(false);
             $table->string('cover')->nullable();
+
+            // === ✅ Tambahan untuk kebutuhan praktikum 5.1 ===
+            $table->text('note')->nullable(); // Catatan detail dengan Trix Editor
+            $table->enum('status', ['pending', 'in_progress', 'done'])->default('pending'); // Status kegiatan
+            $table->date('due_date')->nullable(); // Tanggal jatuh tempo
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
